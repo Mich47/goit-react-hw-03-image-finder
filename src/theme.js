@@ -15,7 +15,7 @@ export const theme = {
     muted: '#f3f6f9',
     border: '#e4e9f0',
   },
-  space: [0, 2, 4, 8, 16, 32, 64, 128, 256],
+  space: [0, 2, 4, 8, 16, 32, 64, 128, 256, 384],
   fonts: {
     body: 'Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif',
     heading: 'system-ui, sans-serif',
