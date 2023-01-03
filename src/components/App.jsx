@@ -1,9 +1,5 @@
-import { nanoid } from 'nanoid';
 import { Component } from 'react';
-import { ContactForm } from './Phonebook/ContactForm';
-import { ContactList } from './Phonebook/ContactList';
-import { Filter } from './Phonebook/Filter';
-import { Section } from './Phonebook/Section';
+import { Searchbar } from './Searchbar/Searchbar';
 
 export class App extends Component {
   state = {
@@ -16,19 +12,9 @@ export class App extends Component {
     filter: '',
   };
 
-  componentDidMount() {
-    const contactsInLS = localStorage.getItem('contacts');
-    if (contactsInLS) {
-      this.setState({ contacts: JSON.parse(contactsInLS) });
-    }
-  }
+  componentDidMount() {}
 
-  componentDidUpdate(_, prevState) {
-    const { contacts } = this.state;
-    if (contacts.length !== prevState.contacts.length) {
-      localStorage.setItem('contacts', JSON.stringify(contacts));
-    }
-  }
+  componentDidUpdate(_, prevState) {}
 
   handleChange = event => {
     const { name, value } = event.target;
@@ -40,52 +26,15 @@ export class App extends Component {
     return this.handleAddedContact(name, number);
   };
 
-  handleAddedContact = (name, number) => {
-    const { contacts } = this.state;
-    //Контакт вже існує, повертає false
-    if (contacts.some(contact => contact.name === name)) {
-      alert(`${name} is already in contacts.`);
-      return;
-    }
-
-    //Інакше додає новий контакт, повертає true
-    this.setState(prevState => ({
-      contacts: [...prevState.contacts, { id: nanoid(), name, number }],
-    }));
-    return true;
-  };
-
-  handleDeleteContact = id => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(item => item.id !== id),
-    }));
-  };
-
-  handleFilterContacts = filter => {
-    const { contacts } = this.state;
-    return contacts.filter(({ name }) => {
-      return name.toLowerCase().includes(filter.toLowerCase());
-    });
-  };
-
   render() {
-    const { contacts, filter } = this.state;
-    const renderContacts = filter
-      ? this.handleFilterContacts(filter)
-      : contacts;
-
     return (
       <>
-        <Section title="Phonebook">
+        <Searchbar></Searchbar>
+        {/* <Section title="Phonebook">
           <ContactForm onSubmit={this.handleSubmitForm} />
         </Section>
         <Section title="Contacts" headingLevel="h2">
-          <Filter filter={filter} onChange={this.handleChange} />
-          <ContactList
-            contacts={renderContacts}
-            onDelete={this.handleDeleteContact}
-          />
-        </Section>
+        </Section> */}
       </>
     );
   }
