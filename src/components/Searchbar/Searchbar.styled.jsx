@@ -41,5 +41,5 @@ export const InputStyled = styled.input`
   width: 100%;
   font-size: ${p => p.theme.fontSizes.s};
   border: ${p => p.theme.borders.none};
-  border-radius: ${p => p.theme.radii.normal};
+  border-radius: ${p => p.theme.radii.large};
 `;
