@@ -4,23 +4,30 @@ import { STATUS } from 'constants/status.constants';
 import { getPosts } from 'services/posts.service';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Button } from './Button/Button';
-import { Modal } from './Modal/Modal';
 
 export class App extends Component {
   state = {
     images: [],
-
+    page: 1,
+    query: '',
     status: STATUS.idle, // 'idle', 'loading', 'success', 'error',
-    isModal: false,
   };
 
   componentDidMount() {
-    this.fetchData();
+    // this.fetchData();
   }
 
-  componentDidUpdate(_, prevState) {}
+  componentDidUpdate(_, prevState) {
+    const { images, page, query } = this.state;
+    console.log('page ', images);
+    if (prevState.query !== query || prevState.page !== page) {
+      this.fetchData();
+    }
+    console.log('prevState.page ', prevState);
+  }
 
-  fetchData = async (query = '', page = 1) => {
+  fetchData = async () => {
+    const { page, query } = this.state;
     const params = {
       q: query,
       page,
@@ -30,38 +37,45 @@ export class App extends Component {
     };
     try {
       const data = await getPosts(params);
-      // console.log('data ', data);
-      this.setState({ images: data.hits, status: STATUS.success });
+
+      this.setState(prevState => ({
+        images: [...prevState.images, ...data.hits],
+        status: STATUS.success,
+      }));
     } catch (error) {
-      // console.log('error ', error);
+      console.log('error ->', error);
       this.setState({ status: STATUS.error });
     }
   };
 
   handleSubmitForm = (event, searchImage) => {
     event.preventDefault();
-    this.fetchData(searchImage);
+
+    this.setState({
+      images: [],
+      page: 1,
+      query: searchImage,
+    });
   };
 
-  handleToggleModalForm = () => {
-    this.setState(prevState => ({ isModal: !prevState.isModal }));
-    console.log('this.state.isModal ', this.state.isModal);
+  handleLoadMore = () => {
+    this.setState(prevState => {
+      console.log('prevState ', prevState);
+      console.log('thisState ', this.state);
+      return {
+        page: prevState.page + 1,
+      };
+    });
   };
 
   render() {
-    const { images, isModal } = this.state;
-    // console.log('images render ', images);
+    const { images } = this.state;
+
     return (
       <>
         <Searchbar onSubmitForm={this.handleSubmitForm}></Searchbar>
         <ImageGallery images={images} onOpen={this.handleToggleModalForm} />
-        <Button>Load more</Button>
-        {isModal && <Modal onClose={this.handleToggleModalForm} />}
-        {/* <Section title="Phonebook">
-          <ContactForm onSubmit={this.handleSubmitForm} />
-        </Section>
-        <Section title="Contacts" headingLevel="h2">
-        </Section> */}
+        <Button onClick={this.handleLoadMore}>Load more</Button>
       </>
     );
   }

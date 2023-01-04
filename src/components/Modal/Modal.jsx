@@ -14,7 +14,6 @@ export class Modal extends Component {
 
   handleEscClose = event => {
     if (event.code === 'Escape') {
-      console.log('event.code ', event.code);
       this.props.onClose();
     }
   };
@@ -28,10 +27,11 @@ export class Modal extends Component {
   };
 
   render() {
+    const { img, alt } = this.props;
     return (
       <OverlayStyled onClick={this.handleClose}>
         <ModalStyled>
-          <img src="" alt="" />
+          <img src={img} alt={alt} />
         </ModalStyled>
       </OverlayStyled>
     );

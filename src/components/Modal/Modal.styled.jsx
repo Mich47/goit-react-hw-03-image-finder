@@ -5,26 +5,21 @@ export const OverlayStyled = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  /* z-index: var(--bs-modal-zindex); */
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   overflow-x: hidden;
   overflow-y: auto;
   outline: 0;
   background-color: rgba(0, 0, 0, 0.5);
+  /* z-index: 1200; */
 `;
 
 export const ModalStyled = styled.div`
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-
-  width: 500px;
-  height: 500px;
-  background-color: white;
-
-  padding: ${p => p.theme.space[4]}px;
+  max-width: calc(100vw - 48px);
+  max-height: calc(100vh - 24px);
 `;
 
 export const ButtonStyled = styled.button`

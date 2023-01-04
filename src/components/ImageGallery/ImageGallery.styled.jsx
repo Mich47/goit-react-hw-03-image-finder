@@ -14,6 +14,6 @@ export const ImageGalleryItemStyled = styled.li`
   overflow: hidden;
 `;
 
-export const ImageGalleryImgStyled = styled.img`
+export const ImageStyled = styled.img`
   cursor: pointer;
 `;
