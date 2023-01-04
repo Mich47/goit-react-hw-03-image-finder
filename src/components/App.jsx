@@ -1,35 +1,62 @@
 import { Component } from 'react';
 import { Searchbar } from './Searchbar/Searchbar';
+import { STATUS } from 'constants/status.constants';
+import { getPosts } from 'services/posts.service';
+import { ImageGallery } from './ImageGallery/ImageGallery';
+import { Button } from './Button/Button';
+import { Modal } from './Modal/Modal';
 
 export class App extends Component {
   state = {
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
-    filter: '',
+    images: [],
+
+    status: STATUS.idle, // 'idle', 'loading', 'success', 'error',
+    isModal: false,
   };
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.fetchData();
+  }
 
   componentDidUpdate(_, prevState) {}
 
-  handleChange = event => {
-    const { name, value } = event.target;
-    this.setState({ [name]: value });
+  fetchData = async (query = '', page = 1) => {
+    const params = {
+      q: query,
+      page,
+      per_page: 12,
+      image_type: 'photo',
+      orientation: 'horizontal',
+    };
+    try {
+      const data = await getPosts(params);
+      console.log('data ', data);
+      this.setState({ images: data.hits, status: STATUS.success });
+    } catch (error) {
+      console.log('error ', error);
+      this.setState({ status: STATUS.error });
+    }
   };
 
-  handleSubmitForm = (event, name, number) => {
+  handleSubmitForm = (event, searchImage) => {
     event.preventDefault();
-    return this.handleAddedContact(name, number);
+    this.fetchData(searchImage);
+  };
+
+  handleModalForm = () => {
+    this.setState(prevState => ({ isModal: !prevState.isModal }));
+    console.log('this.state.isModal ', this.state.isModal);
   };
 
   render() {
+    const { images, isModal } = this.state;
+    console.log('images render ', images);
     return (
       <>
-        <Searchbar></Searchbar>
+        <Searchbar onSubmitForm={this.handleSubmitForm}></Searchbar>
+        <ImageGallery images={images} />
+        <Button>Load more</Button>
+        {isModal && <Modal onClose={this.handleModalForm} />}
         {/* <Section title="Phonebook">
           <ContactForm onSubmit={this.handleSubmitForm} />
         </Section>
