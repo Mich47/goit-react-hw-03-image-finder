@@ -30,10 +30,10 @@ export class App extends Component {
     };
     try {
       const data = await getPosts(params);
-      console.log('data ', data);
+      // console.log('data ', data);
       this.setState({ images: data.hits, status: STATUS.success });
     } catch (error) {
-      console.log('error ', error);
+      // console.log('error ', error);
       this.setState({ status: STATUS.error });
     }
   };
@@ -43,20 +43,20 @@ export class App extends Component {
     this.fetchData(searchImage);
   };
 
-  handleModalForm = () => {
+  handleToggleModalForm = () => {
     this.setState(prevState => ({ isModal: !prevState.isModal }));
     console.log('this.state.isModal ', this.state.isModal);
   };
 
   render() {
     const { images, isModal } = this.state;
-    console.log('images render ', images);
+    // console.log('images render ', images);
     return (
       <>
         <Searchbar onSubmitForm={this.handleSubmitForm}></Searchbar>
-        <ImageGallery images={images} />
+        <ImageGallery images={images} onOpen={this.handleToggleModalForm} />
         <Button>Load more</Button>
-        {isModal && <Modal onClose={this.handleModalForm} />}
+        {isModal && <Modal onClose={this.handleToggleModalForm} />}
         {/* <Section title="Phonebook">
           <ContactForm onSubmit={this.handleSubmitForm} />
         </Section>

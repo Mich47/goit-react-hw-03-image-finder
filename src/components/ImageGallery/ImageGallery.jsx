@@ -1,8 +1,7 @@
 import { ImageGalleryListStyled } from './ImageGallery.styled';
 import { ImageGalleryItem } from './ImageGalleryItem';
 
-export const ImageGallery = ({ images }) => {
-  console.log('images ImageGallery  ', images);
+export const ImageGallery = ({ images, onOpen }) => {
   return (
     <ImageGalleryListStyled>
       {/* Набір <li> із зображеннями */}
@@ -13,6 +12,7 @@ export const ImageGallery = ({ images }) => {
             src={webformatURL}
             alt={tags}
             largeImageURL={largeImageURL}
+            onOpen={onOpen}
           />
         );
       })}

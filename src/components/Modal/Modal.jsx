@@ -4,22 +4,23 @@ import { ModalStyled, OverlayStyled } from './Modal.styled';
 export class Modal extends Component {
   componentDidMount() {
     this.toggleBodyStyles();
-    const modal = document.querySelector('[data-modal]');
-    console.log('modal ', modal);
-    modal.addEventListener('click', this.handleListener);
-    // modal.addEventListener('keydown', this.handleListener);
+    window.addEventListener('keydown', this.handleEscClose);
   }
 
   componentWillUnmount() {
     this.toggleBodyStyles();
-    const modal = document.querySelector('[data-modal]');
-    modal.removeEventListener('click', this.handleListener);
+    window.removeEventListener('keydown', this.handleEscClose);
   }
 
-  handleListener = event => {
-    //   event.target
+  handleEscClose = event => {
+    if (event.code === 'Escape') {
+      console.log('event.code ', event.code);
+      this.props.onClose();
+    }
+  };
+
+  handleClose = event => {
     if (event.target === event.currentTarget) this.props.onClose();
-    console.log('event.target ', event.target === event.currentTarget);
   };
 
   toggleBodyStyles = () => {
@@ -28,7 +29,7 @@ export class Modal extends Component {
 
   render() {
     return (
-      <OverlayStyled data-modal>
+      <OverlayStyled onClick={this.handleClose}>
         <ModalStyled>
           <img src="" alt="" />
         </ModalStyled>
