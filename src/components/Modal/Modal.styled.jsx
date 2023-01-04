@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { space, typography, position } from 'styled-system';
+import { space, typography } from 'styled-system';
 
 export const OverlayStyled = styled.div`
   position: fixed;
