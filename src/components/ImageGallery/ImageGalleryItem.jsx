@@ -18,7 +18,12 @@ export class ImageGalleryItem extends Component {
     const { src, alt, largeImageURL } = this.props;
     return (
       <ImageGalleryItemStyled>
-        <ImageStyled src={src} alt={alt} onClick={this.handleToggleModalForm} />
+        <ImageStyled
+          src={src}
+          alt={alt}
+          onClick={this.handleToggleModalForm}
+          loading="lazy"
+        />
         {isModalOpen &&
           ReactDOM.createPortal(
             <Modal

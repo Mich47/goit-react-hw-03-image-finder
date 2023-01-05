@@ -1,4 +1,5 @@
 import { Box } from 'components/Box';
+import { STATUS } from 'constants/status.constants';
 import { Component } from 'react';
 import { IoSearchOutline, IoCloseOutline } from 'react-icons/io5';
 import {
@@ -23,11 +24,22 @@ export class Searchbar extends Component {
 
   render() {
     const { search } = this.state;
-    const { onSubmitForm } = this.props;
+
+    //Прибираємо усі зайві пробіли
+    const query = search
+      .split(' ')
+      .filter(word => word !== '')
+      .join(' ');
+
+    const { onSubmitForm, status } = this.props;
     return (
       <Box p={4} borderBottom="normal" borderColor="darkGray" as="header">
-        <FormStyled onSubmit={event => onSubmitForm(event, search)}>
-          <ButtonIconStyled type="submit" left={0}>
+        <FormStyled onSubmit={event => onSubmitForm(event, query)}>
+          <ButtonIconStyled
+            type="submit"
+            left={0}
+            disabled={status !== STATUS.success}
+          >
             <IoSearchOutline />
           </ButtonIconStyled>
 
