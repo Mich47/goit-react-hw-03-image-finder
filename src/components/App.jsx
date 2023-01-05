@@ -14,7 +14,7 @@ export class App extends Component {
   };
 
   componentDidMount() {
-    // this.fetchData();
+    this.fetchData();
   }
 
   componentDidUpdate(_, prevState) {
