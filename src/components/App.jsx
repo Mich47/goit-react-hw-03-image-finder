@@ -4,7 +4,7 @@ import { STATUS } from 'constants/status.constants';
 import { getPosts } from 'services/posts.service';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Button } from './Button/Button';
-import { ThreeDots } from 'react-loader-spinner';
+import { Loader } from './Loader/Loader';
 
 export class App extends Component {
   state = {
@@ -37,17 +37,27 @@ export class App extends Component {
       image_type: 'photo',
       orientation: 'horizontal',
     };
+
     try {
       const data = await getPosts(params);
+      const { hits, total, totalHits } = data;
 
-      //Якщо картинок менше ніж у пагінації,
-      // то totalPages = 1, інакше - (data.totalHits - 1)
-      const totalPages = data.total > params.per_page ? data.totalHits - 1 : 1;
+      //Визначаємо кількість картинок у запиті
+      let perPage = 20;
+      if (params.per_page) {
+        perPage = params.per_page;
+      }
+
+      //Деколи з сервера приходять однакові значення кількості фото і сторінок
+      //Наприклад на запит doges, ukr
+      //Якщо це сталося, то визначаємо вручну кількість сторінок
+      //В іншому випадку беремо значення від бекенду
+      const totalPages =
+        totalHits === total ? Math.ceil(total / perPage) : totalHits;
 
       this.setState(prevState => ({
         totalPages,
-        // Дані додаємо у масив, а не перезаписуємо
-        images: [...prevState.images, ...data.hits],
+        images: [...prevState.images, ...hits], // Дані додаємо у масив
         status: STATUS.success,
       }));
     } catch (error) {
@@ -60,12 +70,13 @@ export class App extends Component {
     event.preventDefault();
     const { query } = this.state;
     // Якщо пошуковий запит не змінився, нічого не робимо
-    if (searchImage !== query)
-      this.setState({
-        images: [],
-        page: 1,
-        query: searchImage,
-      });
+    if (searchImage === query) return;
+
+    this.setState({
+      images: [],
+      page: 1,
+      query: searchImage,
+    });
   };
 
   handleLoadMore = () => {
@@ -74,35 +85,32 @@ export class App extends Component {
     }));
   };
 
+  handleAutoScrollBottom(status) {
+    if (status === STATUS.success) {
+      setTimeout(() => {
+        document.body.scrollIntoView({
+          behavior: 'smooth',
+          block: 'end',
+        });
+      }, 500);
+    }
+  }
+
   render() {
     const { images, page, totalPages, status } = this.state;
 
+    // Авто-прокрутка униз
+    this.handleAutoScrollBottom(status);
+
     return (
       <>
-        <Searchbar
-          status={status} //Для того щоб робити кнопку пошуку неактивною
-          onSubmitForm={this.handleSubmitForm}
-        ></Searchbar>
+        {/* status - для того щоб робити кнопку пошуку неактивною */}
+        <Searchbar status={status} onSubmitForm={this.handleSubmitForm} />
         <ImageGallery images={images} onOpen={this.handleToggleModalForm} />
         {page < totalPages && status === STATUS.success && (
           <Button onClick={this.handleLoadMore}>Load more</Button>
         )}
-        {status === STATUS.loading && (
-          <ThreeDots
-            height="80"
-            width="80"
-            radius="9"
-            color="#07c"
-            ariaLabel="three-dots-loading"
-            wrapperStyle={{
-              height: '34px',
-              paddingTop: '16px',
-              paddingBottom: '32px',
-            }}
-            wrapperClassName=""
-            visible={true}
-          />
-        )}
+        <Loader status={status} />
       </>
     );
   }

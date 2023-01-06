@@ -9,7 +9,6 @@ export class ImageGalleryItem extends Component {
   };
 
   handleToggleModalForm = event => {
-    console.log('event ', event);
     this.setState(prevState => ({ isModalOpen: !prevState.isModalOpen }));
   };
 

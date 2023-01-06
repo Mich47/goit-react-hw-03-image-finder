@@ -9,11 +9,10 @@ const postsApi = axios.create({
 export const getPosts = async (params = {}) => {
   const { data } = await postsApi.get('', {
     params: {
-      per_page: 9,
       ...params,
     },
   });
 
-  console.log('data ', data);
+  // console.log('data ', data);
   return data;
 };
