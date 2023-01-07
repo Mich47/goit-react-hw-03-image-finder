@@ -1,14 +1,21 @@
+import { PropTypes } from 'prop-types';
 import * as ReactDOM from 'react-dom';
-import { Modal } from 'components/Modal/Modal';
+import { Modal } from 'components/Modal';
 import { Component } from 'react';
 import { ImageStyled, ImageGalleryItemStyled } from './ImageGallery.styled';
 
 export class ImageGalleryItem extends Component {
+  static propTypes = {
+    src: PropTypes.string.isRequired,
+    alt: PropTypes.string.isRequired,
+    largeImageURL: PropTypes.string.isRequired,
+  };
+
   state = {
     isModalOpen: false,
   };
 
-  handleToggleModalForm = event => {
+  handleToggleModalForm = () => {
     this.setState(prevState => ({ isModalOpen: !prevState.isModalOpen }));
   };
 
@@ -26,7 +33,7 @@ export class ImageGalleryItem extends Component {
         {isModalOpen &&
           ReactDOM.createPortal(
             <Modal
-              img={largeImageURL}
+              src={largeImageURL}
               alt={alt}
               onClose={this.handleToggleModalForm}
             />,

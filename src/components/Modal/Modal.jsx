@@ -1,14 +1,21 @@
+import { PropTypes } from 'prop-types';
 import { Component } from 'react';
 import { ModalStyled, OverlayStyled } from './Modal.styled';
 
 export class Modal extends Component {
+  static propTypes = {
+    src: PropTypes.string.isRequired,
+    alt: PropTypes.string.isRequired,
+    onClose: PropTypes.func.isRequired,
+  };
+
   componentDidMount() {
-    this.toggleBodyStyles();
+    this.setBodyStyles();
     window.addEventListener('keydown', this.handleEscClose);
   }
 
   componentWillUnmount() {
-    this.toggleBodyStyles();
+    this.removeBodyStyles();
     window.removeEventListener('keydown', this.handleEscClose);
   }
 
@@ -22,16 +29,30 @@ export class Modal extends Component {
     if (event.target === event.currentTarget) this.props.onClose();
   };
 
-  toggleBodyStyles = () => {
-    document.body.classList.toggle('modal-open');
+  setBodyStyles = () => {
+    const { scrollHeight, clientHeight } = document.documentElement;
+    if (clientHeight < scrollHeight) {
+      document.body.setAttribute(
+        'style',
+        'overflow: hidden; padding-right: 17px;'
+      );
+      return;
+    }
+    document.body.setAttribute('style', 'overflow: hidden;');
+    // console.log(scrollHeight); // Висота всього документа в пікселях
+    // console.log(clientHeight); // Висота вьюпорта
+  };
+
+  removeBodyStyles = () => {
+    document.body.removeAttribute('style');
   };
 
   render() {
-    const { img, alt } = this.props;
+    const { src, alt } = this.props;
     return (
       <OverlayStyled onClick={this.handleClose}>
         <ModalStyled>
-          <img src={img} alt={alt} />
+          <img src={src} alt={alt} />
         </ModalStyled>
       </OverlayStyled>
     );

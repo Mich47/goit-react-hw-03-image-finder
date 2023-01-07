@@ -1,10 +1,10 @@
 import { Component } from 'react';
-import { Searchbar } from './Searchbar/Searchbar';
 import { STATUS } from 'constants/status.constants';
 import { getPosts } from 'services/posts.service';
-import { ImageGallery } from './ImageGallery/ImageGallery';
-import { Button } from './Button/Button';
-import { Loader } from './Loader/Loader';
+import { Searchbar } from './Searchbar';
+import { ImageGallery } from './ImageGallery';
+import { Button } from './Button';
+import { Loader } from './Loader';
 
 export class App extends Component {
   state = {
@@ -14,10 +14,6 @@ export class App extends Component {
     query: '',
     status: STATUS.idle, // 'idle', 'loading', 'success', 'error',
   };
-
-  componentDidMount() {
-    this.fetchData();
-  }
 
   componentDidUpdate(_, prevState) {
     const { page, query } = this.state;
@@ -57,7 +53,15 @@ export class App extends Component {
 
       this.setState(prevState => ({
         totalPages,
-        images: [...prevState.images, ...hits], // Дані додаємо у масив
+        images: [
+          ...prevState.images,
+          ...hits.map(({ id, largeImageURL, tags, webformatURL }) => ({
+            id,
+            largeImageURL,
+            tags,
+            webformatURL,
+          })),
+        ], // Дані додаємо у масив
         status: STATUS.success,
       }));
     } catch (error) {

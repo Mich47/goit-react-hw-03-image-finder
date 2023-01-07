@@ -1,3 +1,4 @@
+import { PropTypes } from 'prop-types';
 import { Box } from 'components/Box';
 import { STATUS } from 'constants/status.constants';
 import { Component } from 'react';
@@ -9,6 +10,11 @@ import {
 } from '../Searchbar/Searchbar.styled';
 
 export class Searchbar extends Component {
+  static propTypes = {
+    status: PropTypes.string.isRequired,
+    onSubmitForm: PropTypes.func.isRequired,
+  };
+
   state = {
     search: '',
   };
@@ -38,7 +44,7 @@ export class Searchbar extends Component {
           <ButtonIconStyled
             type="submit"
             left={0}
-            disabled={status !== STATUS.success}
+            disabled={status !== STATUS.success && status !== STATUS.idle}
           >
             <IoSearchOutline />
           </ButtonIconStyled>

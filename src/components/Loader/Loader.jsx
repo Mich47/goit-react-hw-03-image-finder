@@ -1,3 +1,4 @@
+import { PropTypes } from 'prop-types';
 import { ThreeDots } from 'react-loader-spinner';
 import { STATUS } from 'constants/status.constants';
 
@@ -20,4 +21,8 @@ export const Loader = ({ status }) => {
       />
     )
   );
+};
+
+Loader.propTypes = {
+  status: PropTypes.string.isRequired,
 };

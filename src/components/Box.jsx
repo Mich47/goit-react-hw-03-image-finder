@@ -13,7 +13,6 @@ import {
 } from 'styled-system';
 
 export const Box = styled('div')(
-  { gap: props => props.gap || '8px' },
   color,
   space,
   layout,
