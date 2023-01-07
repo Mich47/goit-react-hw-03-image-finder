@@ -30,17 +30,20 @@ export class Modal extends Component {
   };
 
   setBodyStyles = () => {
-    const { scrollHeight, clientHeight } = document.documentElement;
-    if (clientHeight < scrollHeight) {
+    const { clientWidth } = document.documentElement; // Ширина вьюпорта
+    const { innerWidth } = window; // Внутрішня ширина вікна
+
+    const scrollWidth = innerWidth - clientWidth;
+    //Якщо є скрол - додаємо падінг праворуч
+    if (scrollWidth) {
       document.body.setAttribute(
         'style',
-        'overflow: hidden; padding-right: 17px;'
+        `overflow: hidden; padding-right: ${scrollWidth}px;`
       );
       return;
     }
+    //Якщо немає - не додаємо падінг праворуч
     document.body.setAttribute('style', 'overflow: hidden;');
-    // console.log(scrollHeight); // Висота всього документа в пікселях
-    // console.log(clientHeight); // Висота вьюпорта
   };
 
   removeBodyStyles = () => {
